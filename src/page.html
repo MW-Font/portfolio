@@ -245,6 +245,43 @@ footer{
 }
 footer a{color:var(--text-2);text-decoration:none}
 footer a:hover{color:var(--amber)}
+/* ---------------------------------------------- hero entrance
+   One orchestrated arrival rather than scattered effects. Hidden state is
+   added by script (html.js-hero), so without JS the hero is simply there. */
+.h1w{display:inline-block;will-change:transform,opacity}
+.js-hero .hero-role,
+.js-hero .h1w,
+.js-hero .hero-bio,
+.js-hero .cta,
+.js-hero .readout{opacity:0}
+.js-hero.is-ready .hero-role,
+.js-hero.is-ready .h1w,
+.js-hero.is-ready .hero-bio,
+.js-hero.is-ready .cta,
+.js-hero.is-ready .readout{
+  animation:rise .95s var(--ease) both;
+  animation-delay:calc(var(--d,0) * 1ms);
+}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+/* ---------------------------------------------- pointer
+   A tile lights from where the cursor actually is. Pointer-driven, so it
+   reads as responsive rather than decorative. */
+.t{position:relative;--mx:50%;--my:50%}
+.t > *{position:relative;z-index:1}
+.t::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;z-index:0;
+  pointer-events:none;opacity:0;transition:opacity .4s var(--ease);
+  background:radial-gradient(320px circle at var(--mx) var(--my),
+             rgba(232,163,61,.10), transparent 62%);
+}
+@media (hover:hover) and (pointer:fine){
+  .t:hover::after{opacity:1}
+}
+
+/* magnetic buttons: the control leans toward the cursor before it is clicked */
+.btn{will-change:transform}
+
 /* ---------------------------------------------- scroll behaviour
    The hidden state is applied by JS (html.js-anim), so if the script never
    runs every element stays visible. Nothing is parked waiting on an observer. */
@@ -265,6 +302,9 @@ footer a:hover{color:var(--amber)}
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
   .js-anim [data-rise]{opacity:1!important;transform:none!important}
+  .js-hero .hero-role,.js-hero .h1w,.js-hero .hero-bio,
+  .js-hero .cta,.js-hero .readout{opacity:1!important;transform:none!important}
+  .t::after{display:none}
   #prog{display:none}
 }
 </style>
@@ -817,7 +857,7 @@ footer a:hover{color:var(--amber)}
   var ctx = c.getContext('2d');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var w = 0, h = 0, dpr = 1, stars = [], sats = [], raf = null, last = 0, satTimer = 0;
-  var scrollY = 0, scrollEase = 0;
+  var scrollY = 0, scrollEase = 0, mx = 0, my = 0, mxE = 0, myE = 0;
 
   function build() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -846,19 +886,23 @@ footer a:hover{color:var(--amber)}
 
   function paint(s, a) {
     /* depth: nearer layers slide further as the page scrolls */
-    var y = s.y - scrollEase * s.par * dpr;
+    var lean = s.par * 10 * dpr;
+    var y = s.y - scrollEase * s.par * dpr - myE * lean;
     var span = h + 40 * dpr;
     y = ((y + 20 * dpr) % span + span) % span - 20 * dpr;
     ctx.beginPath();
     ctx.fillStyle = s.warm ? 'rgba(232,163,61,' + a + ')' : 'rgba(206,222,242,' + a + ')';
-    ctx.arc(s.x, y, s.r, 0, 6.283);
+    ctx.arc(s.x - mxE * lean, y, s.r, 0, 6.283);
     ctx.fill();
   }
 
   function frame(t) {
     var dt = Math.min(48, t - last) || 16; last = t;
     scrollY = window.__sky_scroll || 0;
+    mx = window.__sky_mx || 0; my = window.__sky_my || 0;
     scrollEase += (scrollY - scrollEase) * Math.min(1, dt * 0.006);
+    mxE += (mx - mxE) * Math.min(1, dt * 0.003);
+    myE += (my - myE) * Math.min(1, dt * 0.003);
     ctx.clearRect(0, 0, w, h);
     for (var i = 0; i < stars.length; i++) {
       var s = stars[i];
@@ -962,6 +1006,130 @@ footer a:hover{color:var(--amber)}
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
 
   for (var n = 0; n < nodes.length; n++) io.observe(nodes[n]);
+})();
+
+/* ---- hero: one arrival sequence on load ---- */
+(function () {
+  var docEl = document.documentElement;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var h1 = document.querySelector('h1');
+  if (h1) {
+    /* split the name into words so they can arrive in sequence */
+    var html = h1.innerHTML.split('<br>').map(function (line) {
+      return line.trim().split(/\s+/).map(function (word) {
+        return '<span class="h1w">' + word + '</span>';
+      }).join(' ');
+    }).join('<br>');
+    h1.innerHTML = html;
+  }
+
+  var seq = [];
+  var role = document.querySelector('.hero-role');
+  if (role) seq.push(role);
+  var words = document.querySelectorAll('.h1w');
+  for (var i = 0; i < words.length; i++) seq.push(words[i]);
+  var bio = document.querySelector('.hero-bio');
+  if (bio) seq.push(bio);
+  var cta = document.querySelector('.hero .cta');
+  if (cta) seq.push(cta);
+  var readout = document.querySelector('.readout');
+  if (readout) seq.push(readout);
+
+  for (var j = 0; j < seq.length; j++) seq[j].style.setProperty('--d', 90 + j * 95);
+
+  docEl.className += ' js-hero';
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { docEl.className += ' is-ready'; });
+  });
+})();
+
+/* ---- pointer: tile spotlight, magnetic buttons, starfield lean ---- */
+(function () {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var tiles = document.querySelectorAll('.t');
+  var queued = false, ev = null;
+
+  function apply() {
+    queued = false;
+    if (!ev) return;
+    /* starfield leans toward the cursor, a shallow second axis of depth */
+    window.__sky_mx = (ev.clientX / window.innerWidth - 0.5) * 2;
+    window.__sky_my = (ev.clientY / window.innerHeight - 0.5) * 2;
+
+    for (var i = 0; i < tiles.length; i++) {
+      var t = tiles[i];
+      var r = t.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > window.innerHeight + 200) continue;
+      t.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
+      t.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+    }
+  }
+
+  window.addEventListener('pointermove', function (e) {
+    ev = e;
+    if (!queued) { queued = true; requestAnimationFrame(apply); }
+  }, { passive: true });
+
+  /* magnetic buttons */
+  var btns = document.querySelectorAll('.btn');
+  for (var b = 0; b < btns.length; b++) {
+    (function (el) {
+      var raf = null, tx = 0, ty = 0;
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        tx = (e.clientX - (r.left + r.width / 2)) * 0.22;
+        ty = (e.clientY - (r.top + r.height / 2)) * 0.34;
+        if (!raf) raf = requestAnimationFrame(function () {
+          raf = null;
+          el.style.transform = 'translate(' + tx.toFixed(1) + 'px,' + (ty - 2).toFixed(1) + 'px)';
+        });
+      }, { passive: true });
+      el.addEventListener('pointerleave', function () {
+        el.style.transform = '';
+      });
+    })(btns[b]);
+  }
+})();
+
+/* ---- readout: the figures count up when the panel arrives ---- */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window)) return;
+
+  var panel = document.querySelector('.readout');
+  if (!panel) return;
+
+  var io = new IntersectionObserver(function (entries) {
+    if (!entries[0].isIntersecting) return;
+    io.disconnect();
+
+    var dds = panel.querySelectorAll('dd');
+    for (var i = 0; i < dds.length; i++) {
+      (function (dd) {
+        var node = dd.firstChild;
+        if (!node || node.nodeType !== 3) return;
+        var raw = node.nodeValue.trim();
+        var target = parseFloat(raw);
+        if (!isFinite(target) || target <= 0) return;           /* skip "PK" */
+        var decimals = (raw.split('.')[1] || '').length;
+        var start = performance.now();
+        var dur = 1100;
+
+        (function step(now) {
+          var t = Math.min(1, (now - start) / dur);
+          var eased = 1 - Math.pow(1 - t, 3);                   /* ease out cubic */
+          node.nodeValue = (target * eased).toFixed(decimals);
+          if (t < 1) requestAnimationFrame(step);
+          else node.nodeValue = raw;
+        })(start);
+      })(dds[i]);
+    }
+  }, { threshold: 0.4 });
+
+  io.observe(panel);
 })();
 
 /* ---- mail ----
