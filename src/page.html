@@ -32,6 +32,13 @@
   --e3:0 12px 32px rgba(0,0,0,.5);
   --e4:0 24px 60px rgba(0,0,0,.55);
   --lift:inset 0 1px 0 rgba(255,255,255,.06);
+  /* liquid glass: a dense frosted material, not a see-through film.
+     A bright specular rim on the top edge and a darker inner shade at the
+     bottom are what make it read as a bevelled slab with thickness. */
+  --rim:inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(0,0,0,.38);
+  --rim-strong:inset 0 1px 0 rgba(255,255,255,.30), inset 0 -1px 0 rgba(0,0,0,.42);
+  --glass:linear-gradient(168deg,rgba(31,40,57,.87),rgba(13,18,28,.92));
+  --glass-strong:linear-gradient(168deg,rgba(34,44,63,.84),rgba(12,17,26,.90));
 
   --r:18px;
   --ease:cubic-bezier(.32,.72,0,1);
@@ -103,14 +110,14 @@ h1 .dim{color:var(--text-3)}
 /* telemetry readout beside the name */
 .readout{
   position:relative;overflow:hidden;
-  border:1px solid var(--edge-2);border-radius:var(--r);
-  background:linear-gradient(168deg,rgba(26,34,50,.66),rgba(11,15,23,.78));
-  box-shadow:var(--e4),var(--lift);padding:36px;
+  border:1px solid rgba(255,255,255,.13);border-radius:var(--r);
+  background:var(--glass-strong);
+  box-shadow:var(--e4),var(--rim-strong);padding:36px;
 }
 @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .readout{
-    -webkit-backdrop-filter:blur(18px) saturate(140%);
-    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(40px) saturate(190%);
+    backdrop-filter:blur(40px) saturate(190%);
   }
 }
 /* a slow light drifts across the pane, so the glass reads as a surface */
@@ -150,32 +157,32 @@ h1 .dim{color:var(--text-3)}
 .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:var(--s5)}
 .t{
   grid-column:span 12;
-  background:linear-gradient(168deg,rgba(23,30,44,.72),rgba(12,16,24,.80));
-  border:1px solid var(--edge);
-  border-radius:var(--r);box-shadow:var(--e2),var(--lift);padding:26px;
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:var(--r);box-shadow:var(--e2),var(--rim);padding:26px;
   display:flex;flex-direction:column;gap:14px;overflow:hidden;
   transition:transform .28s var(--ease),box-shadow .28s var(--ease),border-color .28s var(--ease);
 }
 /* the glass only earns its place because a live starfield sits behind it */
 @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .t{
-    -webkit-backdrop-filter:blur(13px) saturate(135%);
-    backdrop-filter:blur(13px) saturate(135%);
+    -webkit-backdrop-filter:blur(30px) saturate(180%);
+    backdrop-filter:blur(30px) saturate(180%);
   }
 }
 /* specular sweep: light travelling across the pane, not a flat wash */
 .t::before{
   content:"";position:absolute;inset:-1px;border-radius:inherit;z-index:0;pointer-events:none;
   background:linear-gradient(104deg,
-    transparent 38%,
-    rgba(255,255,255,.055) 47%,
-    rgba(232,163,61,.05) 51%,
-    transparent 62%);
+    transparent 36%,
+    rgba(255,255,255,.10) 46%,
+    rgba(232,163,61,.075) 51%,
+    transparent 64%);
   background-size:260% 100%;
   background-position:170% 0;
   transition:background-position 1.15s var(--ease);
 }
-.t:hover{transform:translateY(-3px);box-shadow:var(--e3),var(--lift);border-color:var(--edge-2)}
+.t:hover{transform:translateY(-3px);box-shadow:var(--e3),var(--rim-strong);border-color:rgba(255,255,255,.16)}
 .t:hover::before{background-position:-45% 0}
 .t.flat{box-shadow:none;background:transparent;border-color:var(--edge)}
 .t.flat:hover{transform:none;box-shadow:none}
@@ -358,8 +365,8 @@ footer a:hover{color:var(--amber)}
 }
 /* phones pay the most for full-page backdrop blur, so spend less of it there */
 @media (max-width:760px){
-  .t{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-  .readout{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .t{-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%)}
+  .readout{-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%)}
 }
 
 @media (prefers-reduced-motion:reduce){
