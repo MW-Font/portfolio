@@ -132,8 +132,27 @@ h1 .dim{color:var(--text-3)}
 
 /* telemetry readout beside the name */
 .readout{
-  border:1px solid var(--edge);border-radius:var(--r);background:var(--panel);
-  box-shadow:var(--e3),var(--lift);padding:36px;
+  position:relative;overflow:hidden;
+  border:1px solid var(--edge-2);border-radius:var(--r);
+  background:linear-gradient(168deg,rgba(26,34,50,.66),rgba(11,15,23,.78));
+  box-shadow:var(--e4),var(--lift);padding:36px;
+}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .readout{
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    backdrop-filter:blur(18px) saturate(140%);
+  }
+}
+/* a slow light drifts across the pane, so the glass reads as a surface */
+.readout::before{
+  content:"";position:absolute;inset:-40%;z-index:0;pointer-events:none;
+  background:radial-gradient(40% 32% at 30% 25%,rgba(232,163,61,.12),transparent 70%);
+  animation:drift 14s var(--ease) infinite alternate;
+}
+.readout > *{position:relative;z-index:1}
+@keyframes drift{
+  from{transform:translate3d(-6%,-4%,0) scale(1)}
+  to{transform:translate3d(10%,8%,0) scale(1.15)}
 }
 .rl-row{display:flex;align-items:center;gap:20px;padding-bottom:26px;border-bottom:1px solid var(--edge)}
 .portrait{width:104px;height:104px;border-radius:50%;border:1px solid var(--edge-2);flex:none}
@@ -160,12 +179,34 @@ h1 .dim{color:var(--text-3)}
 /* ---------------------------------------------- bento */
 .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:var(--s5)}
 .t{
-  grid-column:span 12;background:var(--panel);border:1px solid var(--edge);
+  grid-column:span 12;
+  background:linear-gradient(168deg,rgba(23,30,44,.72),rgba(12,16,24,.80));
+  border:1px solid var(--edge);
   border-radius:var(--r);box-shadow:var(--e2),var(--lift);padding:26px;
-  display:flex;flex-direction:column;gap:14px;
+  display:flex;flex-direction:column;gap:14px;overflow:hidden;
   transition:transform .28s var(--ease),box-shadow .28s var(--ease),border-color .28s var(--ease);
 }
+/* the glass only earns its place because a live starfield sits behind it */
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .t{
+    -webkit-backdrop-filter:blur(13px) saturate(135%);
+    backdrop-filter:blur(13px) saturate(135%);
+  }
+}
+/* specular sweep: light travelling across the pane, not a flat wash */
+.t::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;z-index:0;pointer-events:none;
+  background:linear-gradient(104deg,
+    transparent 38%,
+    rgba(255,255,255,.055) 47%,
+    rgba(232,163,61,.05) 51%,
+    transparent 62%);
+  background-size:260% 100%;
+  background-position:170% 0;
+  transition:background-position 1.15s var(--ease);
+}
 .t:hover{transform:translateY(-3px);box-shadow:var(--e3),var(--lift);border-color:var(--edge-2)}
+.t:hover::before{background-position:-45% 0}
 .t.flat{box-shadow:none;background:transparent;border-color:var(--edge)}
 .t.flat:hover{transform:none;box-shadow:none}
 @media(min-width:760px){
@@ -337,8 +378,23 @@ footer a:hover{color:var(--amber)}
   box-shadow:0 0 14px rgba(232,163,61,.45);
 }
 
+/* transparency is a preference, not a given */
+@media (prefers-reduced-transparency:reduce){
+  .t,.readout{
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+    background:var(--panel)!important;
+  }
+  .t::before,.readout::before{display:none}
+}
+/* phones pay the most for full-page backdrop blur, so spend less of it there */
+@media (max-width:760px){
+  .t{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .readout{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+}
+
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
+  .readout::before{animation:none;transform:translate3d(0,0,0)}
   .js-anim [data-rise]{opacity:1!important;transform:none!important}
   .js-hero .hero-role,.js-hero .h1w,.js-hero .hero-bio,
   .js-hero .cta,.js-hero .readout{opacity:1!important;transform:none!important}
