@@ -110,7 +110,7 @@ h2{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.02;letter-spacin
 /* ---------------------------------------------- hero */
 .hero{padding-block:var(--s6) var(--s6)}
 .hero-grid{display:grid;gap:var(--s5);grid-template-columns:minmax(0,1fr)}
-@media(min-width:900px){.hero-grid{grid-template-columns:minmax(0,1.22fr) minmax(0,1fr);align-items:end}}
+@media(min-width:900px){.hero-grid{grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);align-items:center}}
 h1{font-size:clamp(48px,9vw,104px);font-weight:900;line-height:.88;letter-spacing:-.05em}
 h1 .dim{color:var(--text-3)}
 .hero-role{
@@ -133,21 +133,29 @@ h1 .dim{color:var(--text-3)}
 /* telemetry readout beside the name */
 .readout{
   border:1px solid var(--edge);border-radius:var(--r);background:var(--panel);
-  box-shadow:var(--e3),var(--lift);padding:30px;
+  box-shadow:var(--e3),var(--lift);padding:36px;
 }
-.rl-row{display:flex;align-items:center;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--edge)}
-.portrait{width:72px;height:72px;border-radius:50%;border:1px solid var(--edge-2);flex:none}
-.rl-sub{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-top:3px}
+.rl-row{display:flex;align-items:center;gap:20px;padding-bottom:26px;border-bottom:1px solid var(--edge)}
+.portrait{width:104px;height:104px;border-radius:50%;border:1px solid var(--edge-2);flex:none}
+.rl-sub{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-top:3px}
 .readout .rl{
-  font-family:var(--ui);font-size:16.5px;font-weight:600;color:var(--text);letter-spacing:-.015em;
+  font-family:var(--ui);font-size:19px;font-weight:600;color:var(--text);letter-spacing:-.018em;
 }
-.readout dl{display:grid;grid-template-columns:1fr 1fr;gap:26px 20px;margin:24px 0 0}
-.readout dt{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+.readout dl{display:grid;grid-template-columns:1fr 1fr;gap:30px 22px;margin:28px 0 0}
+.readout dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
 .readout dd{
-  margin:6px 0 0;font-family:var(--display);font-weight:900;font-size:32px;
+  margin:8px 0 0;font-family:var(--display);font-weight:900;font-size:38px;
   letter-spacing:-.035em;font-variant-numeric:tabular-nums;color:var(--text);line-height:1;
 }
 .readout dd small{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--text-3);display:block;letter-spacing:0;margin-top:7px;line-height:1.5}
+
+/* placed after the base rules it overrides: same specificity, so order decides */
+@media(max-width:560px){
+  .readout{padding:26px}
+  .portrait{width:76px;height:76px}
+  .readout dd{font-size:31px}
+  .readout dl{gap:22px 16px}
+}
 
 /* ---------------------------------------------- bento */
 .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:var(--s5)}
@@ -350,7 +358,7 @@ footer a:hover{color:var(--amber)}
   <div class="hero-grid">
     <div>
       <p class="hero-role">AI systems &amp; automation &middot; remote sensing</p>
-      <h1>Waseem<br>Hanif<span class="dim">.</span></h1>
+      <h1><span class="h1w">Waseem</span><br><span class="h1w">Hanif<span class="dim">.</span></span></h1>
       <p class="hero-bio">
         I build AI systems that run without supervision. Pipelines that generate video end
         to end, agents that answer and book, factories that turn long footage into finished
@@ -363,7 +371,7 @@ footer a:hover{color:var(--amber)}
     </div>
     <div class="readout">
       <div class="rl-row">
-        <img class="portrait" src="assets/photo@2x.jpg" width="72" height="72" alt="Muhammad Waseem Hanif">
+        <img class="portrait" src="assets/photo@2x.jpg" width="104" height="104" alt="Muhammad Waseem Hanif">
         <div><p class="rl">Muhammad Waseem Hanif</p><p class="rl-sub">Lahore, Pakistan</p></div>
       </div>
       <dl>
@@ -1043,17 +1051,6 @@ footer a:hover{color:var(--amber)}
 (function () {
   var docEl = document.documentElement;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  var h1 = document.querySelector('h1');
-  if (h1) {
-    /* split the name into words so they can arrive in sequence */
-    var html = h1.innerHTML.split('<br>').map(function (line) {
-      return line.trim().split(/\s+/).map(function (word) {
-        return '<span class="h1w">' + word + '</span>';
-      }).join(' ');
-    }).join('<br>');
-    h1.innerHTML = html;
-  }
 
   var seq = [];
   var role = document.querySelector('.hero-role');
