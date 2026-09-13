@@ -275,11 +275,33 @@ footer{
 }
 footer a{color:var(--text-2);text-decoration:none}
 footer a:hover{color:var(--amber)}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* ---------------------------------------------- scroll behaviour
+   The hidden state is applied by JS (html.js-anim), so if the script never
+   runs every element stays visible. Nothing is parked waiting on an observer. */
+.js-anim [data-rise]{
+  opacity:0;transform:translateY(18px);
+  transition:opacity .75s var(--ease),transform .75s var(--ease);
+  will-change:opacity,transform;
+}
+.js-anim [data-rise].is-in{opacity:1;transform:none}
+
+/* reading progress, doubles as the one piece of live chrome on the page */
+#prog{
+  position:fixed;top:0;left:0;height:2px;width:0;z-index:5;pointer-events:none;
+  background:linear-gradient(90deg,rgba(232,163,61,.15),var(--amber));
+  box-shadow:0 0 14px rgba(232,163,61,.45);
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  .js-anim [data-rise]{opacity:1!important;transform:none!important}
+  #prog{display:none}
+}
 </style>
 </head>
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
+<div id="prog" aria-hidden="true"></div>
 
 <div class="wrap">
 
@@ -826,6 +848,7 @@ footer a:hover{color:var(--amber)}
   var ctx = c.getContext('2d');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var w = 0, h = 0, dpr = 1, stars = [], sats = [], raf = null, last = 0, satTimer = 0;
+  var scrollY = 0, scrollEase = 0;
 
   function build() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -845,6 +868,7 @@ footer a:hover{color:var(--amber)}
         tw: Math.random() * 6.283,
         tws: 0.4 + Math.random() * 1.1,
         vx: (0.05 + layer * 0.07) * dpr,
+        par: 0.06 + layer * 0.075,
         warm: Math.random() < 0.13
       });
     }
@@ -852,14 +876,20 @@ footer a:hover{color:var(--amber)}
   }
 
   function paint(s, a) {
+    /* depth: nearer layers slide further as the page scrolls */
+    var y = s.y - scrollEase * s.par * dpr;
+    var span = h + 40 * dpr;
+    y = ((y + 20 * dpr) % span + span) % span - 20 * dpr;
     ctx.beginPath();
     ctx.fillStyle = s.warm ? 'rgba(232,163,61,' + a + ')' : 'rgba(206,222,242,' + a + ')';
-    ctx.arc(s.x, s.y, s.r, 0, 6.283);
+    ctx.arc(s.x, y, s.r, 0, 6.283);
     ctx.fill();
   }
 
   function frame(t) {
     var dt = Math.min(48, t - last) || 16; last = t;
+    scrollY = window.__sky_scroll || 0;
+    scrollEase += (scrollY - scrollEase) * Math.min(1, dt * 0.006);
     ctx.clearRect(0, 0, w, h);
     for (var i = 0; i < stars.length; i++) {
       var s = stars[i];
@@ -917,6 +947,52 @@ footer a:hover{color:var(--amber)}
       if (reduce) { ctx.clearRect(0, 0, w, h); for (var k = 0; k < stars.length; k++) paint(stars[k], stars[k].a.toFixed(3)); }
     }, 180);
   });
+})();
+
+/* ---- scroll: reveal on entry, parallax depth, reading progress ---- */
+(function () {
+  var docEl = document.documentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var prog = document.getElementById('prog');
+
+  /* report scroll position to the starfield, cheaply */
+  function onScroll() {
+    var y = window.pageYOffset || docEl.scrollTop || 0;
+    window.__sky_scroll = y;
+    if (prog) {
+      var max = (docEl.scrollHeight - window.innerHeight) || 1;
+      prog.style.width = Math.max(0, Math.min(1, y / max)) * 100 + '%';
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+
+  if (reduce || !('IntersectionObserver' in window)) return;
+
+  /* opt in to the hidden state only now that we know we can animate out of it */
+  docEl.className += ' js-anim';
+
+  var sel = 'section .t, section .row, section .paper, section .gal figure';
+  var nodes = document.querySelectorAll(sel);
+  for (var i = 0; i < nodes.length; i++) nodes[i].setAttribute('data-rise', '');
+
+  var io = new IntersectionObserver(function (entries) {
+    for (var j = 0; j < entries.length; j++) {
+      var e = entries[j];
+      if (!e.isIntersecting) continue;
+      var el = e.target;
+      /* stagger siblings so a bento row arrives as a row, not all at once */
+      var sibs = el.parentNode ? el.parentNode.children : [el];
+      var idx = 0;
+      for (var k = 0; k < sibs.length; k++) { if (sibs[k] === el) { idx = k; break; } }
+      el.style.transitionDelay = Math.min(idx, 4) * 70 + 'ms';
+      el.classList.add('is-in');
+      io.unobserve(el);
+    }
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+
+  for (var n = 0; n < nodes.length; n++) io.observe(nodes[n]);
 })();
 
 /* ---- mail ----
