@@ -212,10 +212,10 @@ h1 .dim{color:var(--text-3)}
   background-position:170% 0;
   transition:background-position 1.15s var(--ease);
 }
-.t:hover{transform:translateY(-3px);box-shadow:var(--e3),var(--rim-strong);border-color:rgba(255,255,255,.16)}
+.t:hover{--hoverY:-3px;box-shadow:var(--e3),var(--rim-strong);border-color:rgba(255,255,255,.16)}
 .t:hover::before{background-position:-45% 0}
 .t.flat{box-shadow:none;background:transparent;border-color:var(--edge)}
-.t.flat:hover{transform:none;box-shadow:none}
+.t.flat:hover{--hoverY:0px;box-shadow:none}
 @media(min-width:760px){
   .c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}
   .c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
@@ -371,12 +371,20 @@ footer a:hover{color:var(--amber)}
 /* ---------------------------------------------- scroll behaviour
    The hidden state is applied by JS (html.js-anim), so if the script never
    runs every element stays visible. Nothing is parked waiting on an observer. */
+/* Reveal offset and hover lift are composed through custom properties.
+   Written as two transform rules they collide on specificity: the reveal
+   selector is heavier, so it silently killed the hover lift. */
+.t,.row,.paper,.gal figure{
+  transform:translateY(calc(var(--riseY,0px) + var(--hoverY,0px)));
+}
 .js-anim [data-rise]{
-  opacity:0;transform:translateY(18px);
-  transition:opacity .75s var(--ease),transform .75s var(--ease);
+  opacity:0;--riseY:20px;
+  transition:opacity .55s var(--ease),transform .55s var(--ease);
   will-change:opacity,transform;
 }
-.js-anim [data-rise].is-in{opacity:1;transform:none}
+/* leaving upward sinks the other way, so the motion follows the scroll */
+.js-anim [data-rise].above{--riseY:-20px}
+.js-anim [data-rise].is-in{opacity:1;--riseY:0px}
 
 /* reading progress, doubles as the one piece of live chrome on the page */
 #prog{
@@ -402,7 +410,7 @@ footer a:hover{color:var(--amber)}
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
   .readout::before{animation:none;transform:translate3d(0,0,0)}
-  .js-anim [data-rise]{opacity:1!important;transform:none!important}
+  .js-anim [data-rise]{opacity:1!important;--riseY:0px!important}
   .js-hero .hero-role,.js-hero .h1w,.js-hero .hero-bio,
   .js-hero .cta,.js-hero .readout{opacity:1!important;transform:none!important}
   .t::after{display:none}
@@ -1092,20 +1100,32 @@ footer a:hover{color:var(--amber)}
   var nodes = document.querySelectorAll(sel);
   for (var i = 0; i < nodes.length; i++) nodes[i].setAttribute('data-rise', '');
 
+  /* Kept under observation rather than unobserved on first entry, so the
+     motion reverses when you scroll back up. The margins leave a dead band
+     at both edges so small scroll jitter cannot flicker a panel. */
   var io = new IntersectionObserver(function (entries) {
     for (var j = 0; j < entries.length; j++) {
       var e = entries[j];
-      if (!e.isIntersecting) continue;
       var el = e.target;
-      /* stagger siblings so a bento row arrives as a row, not all at once */
-      var sibs = el.parentNode ? el.parentNode.children : [el];
-      var idx = 0;
-      for (var k = 0; k < sibs.length; k++) { if (sibs[k] === el) { idx = k; break; } }
-      el.style.transitionDelay = Math.min(idx, 4) * 70 + 'ms';
-      el.classList.add('is-in');
-      io.unobserve(el);
+
+      if (e.isIntersecting) {
+        /* stagger siblings so a bento row arrives as a row, not all at once */
+        var sibs = el.parentNode ? el.parentNode.children : [el];
+        var idx = 0;
+        for (var k = 0; k < sibs.length; k++) { if (sibs[k] === el) { idx = k; break; } }
+        el.style.transitionDelay = Math.min(idx, 4) * 70 + 'ms';
+        el.classList.remove('above');
+        el.classList.add('is-in');
+      } else {
+        /* exit follows the direction it left by: down below, up above */
+        var above = e.boundingClientRect.top < 0;
+        el.style.transitionDelay = '0ms';
+        el.classList.remove('is-in');
+        if (above) { el.classList.add('above'); }
+        else { el.classList.remove('above'); }
+      }
     }
-  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+  }, { rootMargin: '-4% 0px -10% 0px', threshold: 0 });
 
   for (var n = 0; n < nodes.length; n++) io.observe(nodes[n]);
 })();
