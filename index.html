@@ -126,6 +126,17 @@ h1 .dim{color:var(--text-3)}
 }
 .hero-bio{color:var(--text-2);font-size:19.5px;line-height:1.62;max-width:52ch;margin-top:var(--s4)}
 .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:var(--s5)}
+/* the address stays available, one click to copy, without shouting */
+.mailline{
+  display:inline-block;margin-top:18px;padding:0;border:0;background:none;
+  font-family:var(--mono);font-size:13px;color:var(--text-3);cursor:pointer;
+  letter-spacing:.01em;
+  text-decoration:underline;text-underline-offset:4px;
+  text-decoration-color:rgba(255,255,255,.18);
+  transition:color .2s var(--ease),text-decoration-color .2s var(--ease);
+}
+.mailline:hover{color:var(--text-2);text-decoration-color:rgba(232,163,61,.55)}
+.mailline:focus-visible{outline:2px solid var(--amber);outline-offset:4px;border-radius:3px}
 .btn{
   cursor:pointer;
   font-family:var(--ui);font-size:16px;font-weight:600;padding:15px 28px;border-radius:999px;
@@ -436,9 +447,10 @@ footer a:hover{color:var(--amber)}
         clips. Built to survive absence, with retries, approval gates and audit trails.
       </p>
       <div class="cta">
-        <button class="btn btn-1 js-copy" type="button" data-copy="waseemhanif353@gmail.com">waseemhanif353@gmail.com</button>
+        <button class="btn btn-1 js-copy" type="button" data-copy="waseemhanif353@gmail.com">Start a project</button>
         <a class="btn btn-2" href="https://www.linkedin.com/in/muhammed-waseem/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
+      <button class="mailline js-copy" type="button" data-copy="waseemhanif353@gmail.com">waseemhanif353@gmail.com</button>
     </div>
     <div class="readout">
       <div class="rl-row">
@@ -947,9 +959,10 @@ footer a:hover{color:var(--amber)}
     what I would build, before either of us commits to anything.
   </p>
   <div class="cta">
-    <button class="btn btn-1 js-copy" type="button" data-copy="waseemhanif353@gmail.com">waseemhanif353@gmail.com</button>
+    <button class="btn btn-1 js-copy" type="button" data-copy="waseemhanif353@gmail.com">Start a project</button>
     <a class="btn btn-2" href="https://www.linkedin.com/in/muhammed-waseem/" target="_blank" rel="noopener">LinkedIn</a>
   </div>
+  <button class="mailline js-copy" type="button" data-copy="waseemhanif353@gmail.com">waseemhanif353@gmail.com</button>
 </section>
 
 <footer>
@@ -1254,8 +1267,10 @@ footer a:hover{color:var(--amber)}
   if (topLevel) {
     for (var m = 0; m < btns.length; m++) {
       var b0 = btns[m];
+      if (b0.classList.contains('mailline')) continue;   /* stays a copy control */
       var a = document.createElement('a');
       a.className = b0.className.replace('js-copy', '').trim();
+      a.setAttribute('rel', 'noopener');
       a.href = 'mailto:' + b0.getAttribute('data-copy') + '?subject=Project%20enquiry';
       a.textContent = b0.textContent;
       b0.parentNode.replaceChild(a, b0);
@@ -1268,7 +1283,9 @@ footer a:hover{color:var(--amber)}
       b.addEventListener('click', function () {
         var v = b.getAttribute('data-copy');
         var done = function () {
-          b.textContent = 'Copied to clipboard';
+          b.textContent = b.classList.contains('mailline')
+            ? 'Address copied'
+            : 'Copied to clipboard';
           setTimeout(function () { b.textContent = original; }, 1800);
         };
         if (navigator.clipboard && navigator.clipboard.writeText) {
