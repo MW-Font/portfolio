@@ -1,0 +1,930 @@
+<title>Waseem Hanif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* =========================================================
+   Instrument panel. Deep navy ground, amber signal accent,
+   bento architecture, four-level elevation.
+   Committed dark: every product shown here is a dark interface.
+   ========================================================= */
+:root{
+  --void:#070910;
+  --void-2:#0A0D15;
+  --panel:#0E1119;
+  --panel-2:#141824;
+  --edge:rgba(255,255,255,.075);
+  --edge-2:rgba(255,255,255,.14);
+  --text:#EAEEF5;
+  --text-2:#98A2B3;
+  --text-3:#616B7B;
+  --amber:#E8A33D;
+  --amber-2:#F2BC68;
+  --amber-soft:rgba(232,163,61,.13);
+  --ok:#4FB98D;
+
+  --display:'Chivo','Helvetica Neue',sans-serif;
+  --ui:'IBM Plex Sans','Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+
+  --e1:0 1px 2px rgba(0,0,0,.4);
+  --e2:0 4px 12px rgba(0,0,0,.45);
+  --e3:0 12px 32px rgba(0,0,0,.5);
+  --e4:0 24px 60px rgba(0,0,0,.55);
+  --lift:inset 0 1px 0 rgba(255,255,255,.06);
+
+  --r:18px;
+  --ease:cubic-bezier(.32,.72,0,1);
+  --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px; --s6:80px; --s7:112px;
+  --maxw:1160px;
+}
+
+#sky{position:fixed;inset:0;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1}
+
+*{box-sizing:border-box}
+body{
+  background:var(--void);
+  color:var(--text);
+  font-family:var(--ui);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(900px 500px at 12% -8%, rgba(232,163,61,.055), transparent 65%),
+    radial-gradient(760px 460px at 96% 4%, rgba(77,130,220,.055), transparent 62%);
+  background-repeat:no-repeat;
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:24px}
+h1,h2,h3,h4{margin:0;font-family:var(--display);text-wrap:balance}
+p{margin:0}
+img{display:block;max-width:100%}
+ul{margin:0;padding:0;list-style:none}
+a{color:var(--amber);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--amber);outline-offset:4px;border-radius:4px}
+
+/* ---------------------------------------------- section chrome */
+section{padding-block:var(--s7)}
+.eyebrow{
+  font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text-2);
+  display:flex;align-items:center;gap:12px;
+}
+.eyebrow::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:var(--amber);box-shadow:0 0 10px rgba(232,163,61,.7);flex:none;
+}
+h2{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.02;letter-spacing:-.035em;margin-top:var(--s3)}
+.sec-sub{color:var(--text-2);max-width:60ch;margin-top:var(--s3);font-size:19px;line-height:1.6}
+
+/* ---------------------------------------------- hero */
+.hero{padding-block:var(--s6) var(--s6)}
+.hero-grid{display:grid;gap:var(--s5);grid-template-columns:minmax(0,1fr)}
+@media(min-width:900px){.hero-grid{grid-template-columns:minmax(0,1.22fr) minmax(0,1fr);align-items:end}}
+h1{font-size:clamp(48px,9vw,104px);font-weight:900;line-height:.88;letter-spacing:-.05em}
+h1 .dim{color:var(--text-3)}
+.hero-role{
+  font-family:var(--mono);font-size:13.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:var(--s4);
+}
+.hero-bio{color:var(--text-2);font-size:19.5px;line-height:1.62;max-width:52ch;margin-top:var(--s4)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:var(--s5)}
+.btn{
+  cursor:pointer;
+  font-family:var(--ui);font-size:16px;font-weight:600;padding:15px 28px;border-radius:999px;
+  text-decoration:none;border:1px solid transparent;display:inline-flex;align-items:center;gap:10px;
+  transition:transform .22s var(--ease),box-shadow .22s var(--ease),background .22s var(--ease);
+}
+.btn-1{background:var(--amber);color:#17120A;box-shadow:0 8px 26px rgba(232,163,61,.26)}
+.btn-1:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(232,163,61,.34)}
+.btn-2{border-color:var(--edge-2);color:var(--text);background:rgba(255,255,255,.03)}
+.btn-2:hover{transform:translateY(-2px);background:rgba(255,255,255,.06)}
+
+/* telemetry readout beside the name */
+.readout{
+  border:1px solid var(--edge);border-radius:var(--r);background:var(--panel);
+  box-shadow:var(--e3),var(--lift);padding:30px;
+}
+.rl-row{display:flex;align-items:center;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--edge)}
+.portrait{width:72px;height:72px;border-radius:50%;border:1px solid var(--edge-2);flex:none}
+.rl-sub{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-top:3px}
+.readout .rl{
+  font-family:var(--ui);font-size:16.5px;font-weight:600;color:var(--text);letter-spacing:-.015em;
+}
+.readout dl{display:grid;grid-template-columns:1fr 1fr;gap:26px 20px;margin:24px 0 0}
+.readout dt{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+.readout dd{
+  margin:6px 0 0;font-family:var(--display);font-weight:900;font-size:32px;
+  letter-spacing:-.035em;font-variant-numeric:tabular-nums;color:var(--text);line-height:1;
+}
+.readout dd small{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--text-3);display:block;letter-spacing:0;margin-top:7px;line-height:1.5}
+
+/* ---------------------------------------------- bento */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:var(--s5)}
+.t{
+  grid-column:span 12;background:var(--panel);border:1px solid var(--edge);
+  border-radius:var(--r);box-shadow:var(--e2),var(--lift);padding:26px;
+  display:flex;flex-direction:column;gap:14px;
+  transition:transform .28s var(--ease),box-shadow .28s var(--ease),border-color .28s var(--ease);
+}
+.t:hover{transform:translateY(-3px);box-shadow:var(--e3),var(--lift);border-color:var(--edge-2)}
+.t.flat{box-shadow:none;background:transparent;border-color:var(--edge)}
+.t.flat:hover{transform:none;box-shadow:none}
+@media(min-width:760px){
+  .c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}
+  .c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+}
+@media(min-width:520px) and (max-width:759px){
+  .c3,.c4,.c5,.c6{grid-column:span 6}
+}
+
+.t .kick{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-2)}
+.t h3{font-size:26px;font-weight:700;line-height:1.12;letter-spacing:-.026em}
+.t h4{font-size:20px;font-weight:700;line-height:1.2;letter-spacing:-.02em}
+.t p{color:var(--text-2);font-size:15.5px;line-height:1.65}
+.t .built{
+  font-family:var(--mono);font-size:11.5px;line-height:1.8;color:var(--text-3);
+  margin-top:auto;padding-top:14px;border-top:1px solid var(--edge);
+}
+
+/* capability tiles */
+.cap-num{font-family:var(--mono);font-size:12.5px;color:var(--amber);letter-spacing:.12em}
+.cap ul{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.cap li{font-size:15px;line-height:1.55;color:var(--text-2);padding-left:16px;position:relative}
+.cap li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:1px;background:var(--amber);opacity:.8}
+
+/* screenshot inside a tile: bleed to the tile edge */
+.shot{
+  margin:-26px -26px 0;border-bottom:1px solid var(--edge);
+  border-radius:var(--r) var(--r) 0 0;overflow:hidden;background:var(--void-2);
+}
+.shot img{width:100%;height:auto}
+.shot.tall img{aspect-ratio:16/9;object-fit:cover;object-position:top center}
+
+/* numbered stage list */
+.stages{counter-reset:st;display:flex;flex-direction:column}
+.stg{
+  display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px;
+  padding-block:11px;border-top:1px solid var(--edge);
+}
+.stg:first-child{border-top:0;padding-top:2px}
+.stg::before{
+  counter-increment:st;content:counter(st,decimal-leading-zero);
+  font-family:var(--mono);font-size:10px;color:var(--text-3);padding-top:3px;
+}
+.stg b{font-size:15.5px;font-weight:600;display:block;color:var(--text);letter-spacing:-.012em}
+.stg span{font-family:var(--mono);font-size:11.5px;color:var(--text-3);line-height:1.62;display:block;margin-top:4px}
+.stg.gate b{color:var(--amber)}
+.stg.gate::before{color:var(--amber)}
+
+/* metric strip */
+.figs{display:flex;flex-wrap:wrap;gap:22px;padding-top:4px}
+.figs div{min-width:76px}
+.figs dt{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)}
+.figs dd{
+  margin:5px 0 0;font-family:var(--display);font-weight:700;font-size:24px;
+  letter-spacing:-.026em;font-variant-numeric:tabular-nums;
+}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;align-self:flex-start;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  padding:6px 12px;border-radius:999px;border:1px solid var(--edge-2);color:var(--text-2);
+}
+.chip::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--text-3)}
+.chip.ok{color:var(--ok);border-color:rgba(79,185,141,.33)}
+.chip.ok::before{background:var(--ok);box-shadow:0 0 8px rgba(79,185,141,.8)}
+.chip.warn{color:var(--amber);border-color:rgba(232,163,61,.33)}
+.chip.warn::before{background:var(--amber)}
+
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.trio img{aspect-ratio:3/4;object-fit:cover;border-radius:8px;border:1px solid var(--edge)}
+
+/* split tile: media beside copy */
+@media(min-width:860px){
+  .split{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;align-items:center}
+  .split .shot{margin:-26px 0 -26px -26px;border-bottom:0;border-right:1px solid var(--edge);border-radius:var(--r) 0 0 var(--r);height:100%}
+  .split .shot img{height:100%;object-fit:cover}
+  .split .copy{display:flex;flex-direction:column;gap:13px}
+}
+
+@media(min-width:860px){
+  .split.rev{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}
+  .split.rev .shot{order:2;margin:-26px -26px -26px 0;border-right:0;border-left:1px solid var(--edge);border-radius:0 var(--r) var(--r) 0}
+}
+
+/* phone screenshot strip */
+.phones{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.phones img{width:100%;border-radius:10px;border:1px solid var(--edge)}
+@media(max-width:520px){.phones{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------------------------------------------- plain rows (not everything is a card) */
+.rows{margin-top:var(--s5);border-top:1px solid var(--edge)}
+.row{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding-block:26px;border-bottom:1px solid var(--edge)}
+@media(min-width:820px){.row{grid-template-columns:230px minmax(0,1fr);gap:var(--s5);align-items:start}}
+.row h4{font-size:21px;font-weight:700;letter-spacing:-.022em}
+.row .venue{font-family:var(--mono);font-size:12.5px;color:var(--amber);line-height:1.7;letter-spacing:.02em}
+.row p{color:var(--text-2);font-size:16px;line-height:1.7;max-width:64ch}
+.row p + p{margin-top:11px}
+.row .note{font-family:var(--mono);font-size:11.5px;color:var(--text-3);margin-top:12px;line-height:1.7}
+
+/* ---------------------------------------------- gallery */
+.gal{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-top:var(--s5)}
+.gal figure{margin:0;border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:var(--panel)}
+.gal img{width:100%;height:150px;object-fit:cover;display:block}
+.gal figcaption{font-family:var(--mono);font-size:11.5px;color:var(--text-3);padding:12px 13px;line-height:1.55}
+.gal figcaption b{display:block;color:var(--text-2);font-weight:500;margin-bottom:2px}
+
+/* ---------------------------------------------- tools + footer */
+.tools{font-family:var(--mono);font-size:14px;line-height:2.2;color:var(--text-2);max-width:74ch;margin-top:var(--s4)}
+.tools i{font-style:normal;color:var(--amber);opacity:.5;margin:0 7px}
+.close{padding-block:var(--s7)}
+footer{
+  padding-block:var(--s4) var(--s6);border-top:1px solid var(--edge);
+  font-family:var(--mono);font-size:11.5px;color:var(--text-3);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+footer a{color:var(--text-2);text-decoration:none}
+footer a:hover{color:var(--amber)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<div class="wrap">
+
+<!-- ===================================================== HERO -->
+<header class="hero">
+  <div class="hero-grid">
+    <div>
+      <p class="hero-role">AI systems &amp; automation &middot; remote sensing</p>
+      <h1>Waseem<br>Hanif<span class="dim">.</span></h1>
+      <p class="hero-bio">
+        I build AI systems that run without supervision. Pipelines that generate video end
+        to end, agents that answer and book, factories that turn long footage into finished
+        clips. Built to survive absence, with retries, approval gates and audit trails.
+      </p>
+      <div class="cta">
+        <button class="btn btn-1 js-copy" type="button" data-copy="waseemhanif353@gmail.com">waseemhanif353@gmail.com</button>
+        <a class="btn btn-2" href="https://www.linkedin.com/in/muhammed-waseem/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="readout">
+      <div class="rl-row">
+        <img class="portrait" src="assets/photo@2x.jpg" width="72" height="72" alt="Muhammad Waseem Hanif">
+        <div><p class="rl">Muhammad Waseem Hanif</p><p class="rl-sub">Lahore, Pakistan</p></div>
+      </div>
+      <dl>
+        <div><dt>Largest pipeline</dt><dd>61<small>nodes, 5 vendors</small></dd></div>
+        <div><dt>Agent tools</dt><dd>8<small>live, not simulated</small></dd></div>
+        <div><dt>Thesis grade</dt><dd>4.0<small>distinction</small></dd></div>
+        <div><dt>Based in</dt><dd>PK<small>remote, worldwide</small></dd></div>
+      </dl>
+    </div>
+  </div>
+</header>
+
+<!-- ===================================================== CAPABILITIES -->
+<section>
+  <p class="eyebrow">What I do</p>
+  <div class="bento">
+    <div class="t c3 cap">
+      <span class="cap-num">01</span>
+      <h4>AI agents &amp; pipelines</h4>
+      <ul>
+        <li>Tool-calling agents with retrieval, memory and real actions</li>
+        <li>Multi-model orchestration, each step routed to the right model</li>
+        <li>Fallback routing so one dead endpoint cannot stop a run</li>
+      </ul>
+    </div>
+    <div class="t c3 cap">
+      <span class="cap-num">02</span>
+      <h4>Generative video</h4>
+      <ul>
+        <li>Script to scene to clip to assembled video, automated</li>
+        <li>Lip-synced presenters and synthesised voice</li>
+        <li>Clip factories producing short form at volume</li>
+      </ul>
+    </div>
+    <div class="t c3 cap">
+      <span class="cap-num">03</span>
+      <h4>Unattended operation</h4>
+      <ul>
+        <li>Scheduled runs that retry, wait for network and self-heal</li>
+        <li>Human approval gates where publishing wrong would cost</li>
+        <li>Audit trails, so a decision can be checked afterwards</li>
+      </ul>
+    </div>
+    <div class="t c3 cap">
+      <span class="cap-num">04</span>
+      <h4>Satellite &amp; GIS</h4>
+      <ul>
+        <li>Vegetation indices and quantified change detection</li>
+        <li>Land cover classification with accuracy assessment</li>
+        <li>Print-ready layouts, or raw GeoTIFF</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== AI SYSTEMS -->
+<section>
+  <p class="eyebrow">AI systems</p>
+  <h2>Things that keep running<br>when I am not there.</h2>
+
+  <div class="bento">
+
+    <!-- 61-node pipeline, real n8n canvas -->
+    <article class="t c12 split">
+      <div class="shot"><img src="assets/flow-ugc.jpg" alt="The UGC-W workflow canvas in n8n: parallel branches of nodes covering scraping, Claude prompt generation, scene splitting, clip generation, lip-sync and assembly"></div>
+      <div class="copy">
+        <span class="chip">GRQ Holdings &middot; 2026</span>
+        <p class="kick">Head of AI infrastructure</p>
+        <h3>61 nodes from a product URL to a finished video ad</h3>
+        <p>
+          One link in, a complete advert out, with a lip-synced presenter reading a script
+          written for that exact product. Each model is picked for what it does best: Claude
+          for creative direction, Gemini to watch the generated footage back and judge it,
+          fal.ai for imagery and motion, ElevenLabs for voice.
+        </p>
+        <p>
+          The hard part was never generation, it was keeping sixty-one steps coherent.
+          Eighteen code nodes carry the logic that splits scenes, bridges them so the cuts
+          make sense, and recovers the right asset URL from each vendor response.
+        </p>
+        <dl class="figs">
+          <div><dt>Nodes</dt><dd>61</dd></div>
+          <div><dt>Logic steps</dt><dd>18</dd></div>
+          <div><dt>Vendors</dt><dd>5</dd></div>
+        </dl>
+        <p class="built">n8n &middot; Claude &middot; Gemini &middot; fal.ai &middot; ElevenLabs &middot; Sync Labs &middot; FFmpeg &middot; Sheets and Drive</p>
+      </div>
+    </article>
+
+    <!-- Receptionist, real n8n canvas -->
+    <article class="t c7">
+      <div class="shot"><img src="assets/flow-receptionist.jpg" alt="The receptionist workflow canvas in n8n: an AI agent with eight tools fanning out to calendar, CRM and confirmation actions, beside a Telegram intake flow with a wait and edit step"></div>
+      <p class="kick">AI receptionist</p>
+      <h3>An agent that actually books, not one that promises to</h3>
+      <p>
+        Most chatbot demos stop at conversation. The fan of tools on the right of that canvas
+        is the difference: live calendar reads, appointment create, update and delete, a CRM
+        lookup and append, and a confirmation it sends itself. Retrieval over the real service
+        documents keeps its answers specific rather than generic.
+      </p>
+      <p>
+        The small chain on the left is the detail that makes it feel human. People send three
+        short messages in a row, so it waits, flushes them together, and edits one reply into
+        place instead of interrupting itself twice.
+      </p>
+      <dl class="figs">
+        <div><dt>Tools</dt><dd>8</dd></div>
+        <div><dt>Channels</dt><dd>3</dd></div>
+        <div><dt>Sub-flows</dt><dd>7</dd></div>
+      </dl>
+      <p class="built">n8n &middot; Gemini &middot; Pinecone &middot; Google Calendar &middot; Sheets CRM &middot; WhatsApp &middot; Telegram</p>
+    </article>
+
+    <!-- GeoReport conversational analyst -->
+    <article class="t c5">
+      <div class="shot"><img src="assets/shot-georeport-analyst.jpg" alt="GeoReport AI Analyst panel beside the globe, inviting a plain-language description of the analysis to run"></div>
+      <span class="chip ok">Live</span>
+      <p class="kick">GeoReport AI &middot; conversational analyst</p>
+      <h3>Describe it in a sentence, confirm before it runs</h3>
+      <p>
+        Say what you want mapped in plain language and it interviews you for whatever it
+        still needs, proposes candidates when a place name is ambiguous, then shows exactly
+        what it is about to run and waits.
+      </p>
+      <p>
+        That confirm step matters because every run costs real satellite processing time.
+        Guessing at a vague request and mapping the wrong area is the expensive failure.
+      </p>
+      <p class="built">FastAPI &middot; multi-turn agent &middot; geocoding with candidate fallback &middot; CesiumJS</p>
+    </article>
+
+    <!-- Clipify -->
+    <article class="t c7">
+      <div class="shot"><img src="assets/shot-clipify-new.jpg" alt="Clipify interface: paste a link or drop a file and tell the AI what to look for, with review and queue navigation"></div>
+      <span class="chip ok">Running</span>
+      <p class="kick">Clipify &middot; clip factory</p>
+      <h3>Long video into short form, without losing the veto</h3>
+      <p>
+        A full web app, not a script. Paste a link and it reads the transcript first, so every
+        moment is visible before a single byte of video downloads. You tick what is worth
+        making, it renders with word-level captions, you watch each result, and only then does
+        anything publish.
+      </p>
+      <p>
+        Reading the transcript first is also what makes it cheap. The download is only the
+        chosen window, about 5 MB instead of gigabytes, and further clips from the same source
+        cost nothing but a render.
+      </p>
+      <dl class="figs">
+        <div><dt>Per build</dt><dd>~5 MB</dd></div>
+        <div><dt>Human gates</dt><dd>2</dd></div>
+        <div><dt>Cadence</dt><dd>4 h</dd></div>
+      </dl>
+      <p class="built">Python &middot; Flask &middot; FFmpeg &middot; Whisper &middot; vision and transcript models &middot; SQLite</p>
+    </article>
+
+    <!-- GeoReport globe -->
+    <article class="t c5">
+      <div class="shot"><img src="assets/shot-georeport-satellites.jpg" alt="GeoReport AI: a 3D globe with five satellites in orbit and a panel listing Landsat 8, Landsat 9, Sentinel-2, Sentinel-1 and Terra Aqua MODIS"></div>
+      <span class="chip ok">Live</span>
+      <p class="kick">GeoReport AI</p>
+      <h3>Reports written from measurements, not guesses</h3>
+      <p>
+        Draw an area on a living globe, pick two periods, and get a change-detection report.
+        The analysis runs first and the model only ever describes numbers it actually
+        produced, so it can write the report but never invent the measurement.
+      </p>
+      <dl class="figs">
+        <div><dt>Analyses</dt><dd>28</dd></div>
+        <div><dt>Turnaround</dt><dd>~10 min</dd></div>
+      </dl>
+      <p class="built">FastAPI &middot; Next.js &middot; CesiumJS &middot; Earth Engine &middot; Sentinel &middot; Landsat &middot; MODIS</p>
+    </article>
+
+    <!-- LinkedIn engine -->
+    <article class="t c12 split rev">
+      <div class="shot" style="padding:26px;background:var(--panel-2)">
+        <div class="trio">
+          <img src="assets/li-gis.jpg" alt="Generated poster in a cartographic theme">
+          <img src="assets/li-onyx.png" alt="Generated poster in a dark ledger theme">
+          <img src="assets/li-editorial.png" alt="Generated poster in a newspaper editorial theme">
+        </div>
+      </div>
+      <div class="copy">
+        <span class="chip ok">Running multi-client</span>
+        <p class="kick">Publishing engine &middot; one approval per week</p>
+        <h3>A weekly content engine with a real design system behind it</h3>
+        <p>
+          Every Sunday it plans a five-part series, renders six A4 posters and sends one
+          email. Reply once to approve and it publishes the right poster each weekday without
+          further input. A pillar rotation walks a twelve-topic sweep while a no-repeat memory
+          keeps recent topics out of the prompt.
+        </p>
+        <p>
+          Those three are real output from roughly twenty-six themes across eight distinct
+          layout architectures, not one skin recoloured eight times. It waits for the network,
+          retries, guards against double-posting, and publishes the next unposted item rather
+          than indexing on the weekday, so a missed day never drops a post.
+        </p>
+        <dl class="figs">
+          <div><dt>Themes</dt><dd>~26</dd></div>
+          <div><dt>Architectures</dt><dd>8</dd></div>
+          <div><dt>Approvals</dt><dd>1 / wk</dd></div>
+        </dl>
+        <p class="built">Python &middot; LinkedIn UGC API &middot; headless render &middot; IMAP approval loop</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===================================================== MORE AUTOMATION -->
+<section style="padding-top:0">
+  <p class="eyebrow">More automation</p>
+  <div class="bento">
+
+    <article class="t c4">
+      <div class="shot"><img src="assets/flow-youtube.jpg" alt="The Youtube Automation canvas in n8n: schedule trigger, sheet read, a model with a think tool, Veo 3 Fast, wait, convert, upload and sheet update"></div>
+      <h4>Text to published video</h4>
+      <p>
+        A scheduled pipeline reads a topic from a spreadsheet, has a model think through the
+        treatment, generates the footage with Veo 3, uploads and publishes it, then writes
+        the result back. Nobody touches it between topic and live video.
+      </p>
+      <p class="built">n8n &middot; Gemini &middot; Veo 3 Fast &middot; Drive &middot; Sheets</p>
+    </article>
+
+    <article class="t c4">
+      <h4>LeadGen Engine</h4>
+      <p>
+        Finds target businesses, reads each prospect&rsquo;s site, writes a genuinely specific
+        email rather than a template, and sends on a daily cap. Nothing leaves the machine
+        until a person approves the draft. The engineering is in surviving unattended
+        operation: dead connections reconnect rather than being misreported as bounces.
+      </p>
+      <p class="built">Python &middot; Playwright &middot; SQLite &middot; SMTP and IMAP</p>
+    </article>
+
+    <article class="t c4">
+      <div class="shot"><img src="assets/flow-lumina.jpg" alt="The Lumina canvas in n8n: an AI agent behind a webhook with six data tools including VIIRS, air quality, weather, geocoding and a NASA index"></div>
+      <h4>Lumina</h4>
+      <p>
+        A conversational agent for night-sky and air-quality questions, holding six live data
+        tools: VIIRS radiance, geocoding, weather, air quality and a NASA research index. It
+        fetches real measurements rather than recalling them.
+      </p>
+      <p class="built">n8n &middot; Gemini &middot; VIIRS &middot; OpenWeatherMap. The WebGIS platform it plugs into is a third-party open-source template; the agent is mine.</p>
+    </article>
+
+    <article class="t c4">
+      <h4>StickMind</h4>
+      <p>
+        Fully original animation with no third-party footage anywhere. The part worth showing
+        is the validation harness: it re-derives the inverse kinematics and asserts
+        feet-on-floor, no-slide and no-inverted-shin across every frame of every action,
+        which caught four bugs that had shipped in every previous video.
+      </p>
+      <p class="built">Remotion &middot; React &middot; Whisper &middot; inverse kinematics &middot; FFmpeg</p>
+    </article>
+
+    <article class="t c4">
+      <span class="chip warn">Demo accounts only</span>
+      <h4>Trading systems</h4>
+      <p>
+        Multi-book MetaTrader 5 architecture, each book isolated on an always-on VM. The value
+        is the apparatus rather than the strategy: walk-forward backtesting with separate
+        in-sample and out-of-sample windows, half-Kelly sizing with a drawdown governor,
+        circuit breakers. Every AI veto is forward-simulated into a shadow book so the layer
+        can be measured instead of assumed. No performance claim is made here.
+      </p>
+      <p class="built">Python &middot; MetaTrader 5 &middot; PyTorch &middot; LightGBM &middot; Azure VM</p>
+    </article>
+
+    <article class="t c4">
+      <h4>Tooling</h4>
+      <p>
+        <b>architect-agent</b> interviews you about a project idea, then generates the
+        architecture document, sub-agents and task breakdown. <b>A Shopify scraper</b> extracts
+        structured product data and feeds the video pipeline above. <b>A Meta Ad Library
+        scraper</b> pulls competitor creative, still in progress.
+      </p>
+      <p class="built">Python &middot; Flask &middot; Playwright &middot; Docker &middot; private repositories, walkthrough on request</p>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===================================================== GEOSPATIAL -->
+<section>
+  <p class="eyebrow">Where the rigour comes from</p>
+  <h2>The measurement side.</h2>
+  <p class="sec-sub">
+    Remote sensing is where I learned that a confident-looking output is worthless if the
+    method behind it does not hold. That habit is what I bring to the AI work.
+  </p>
+
+  <div class="bento">
+
+    <article class="t c12 split">
+      <div class="shot"><img src="assets/card-fsi.jpg" alt="Weighted Forest Sensitivity Index map of the Sulaiman Range showing graduated risk classes over hillshaded terrain"></div>
+      <div class="copy">
+        <p class="kick">Sulaiman Range, Pakistan</p>
+        <h3>Climate-driven forest sensitivity from SAR and optical time series</h3>
+        <p>
+          Four post-monsoon epochs of Sentinel-1 SAR and Sentinel-2 imagery, composited in
+          Earth Engine and fused into a weighted five-tier sensitivity index. Random Forest
+          carried the predictive step, and the index was validated against independent
+          occurrence data rather than back-fitted to a desired answer.
+        </p>
+        <p>
+          Across 2019 to 2025 NDVI rose 2.9 percent while soil moisture fell 40 percent and
+          evapotranspiration fell 41 percent: greener canopy over a drying root zone.
+        </p>
+        <dl class="figs">
+          <div><dt>R&sup2;</dt><dd>0.8879</dd></div>
+          <div><dt>RMSE</dt><dd>0.00388</dd></div>
+          <div><dt>Pixel</dt><dd>10 m</dd></div>
+        </dl>
+        <p class="built">Google Earth Engine &middot; Sentinel-1 GRD &middot; Sentinel-2 SR &middot; Random Forest &middot; QGIS<br><a href="https://github.com/MW-Font/Thesis_Sulaiman_2026" target="_blank" rel="noopener">Pipeline source on GitHub</a></p>
+      </div>
+    </article>
+
+    <article class="t c12 split rev">
+      <div class="shot" style="padding:22px;background:var(--panel-2)">
+        <div class="phones">
+          <img src="assets/fgt-map.jpg" alt="FGT map view with satellite basemap, a located position and an Add Point button">
+          <img src="assets/fgt-survey.jpg" alt="FGT survey form with GPS accuracy, point name, category, notes and capture photo">
+          <img src="assets/fgt-points.jpg" alt="FGT points list showing twelve collected survey points with photo thumbnails">
+          <img src="assets/fgt-export.jpg" alt="FGT export screen with a session summary and GeoJSON or CSV export options">
+        </div>
+      </div>
+      <div class="copy">
+        <span class="chip ok">Shipped &middot; Android and PWA</span>
+        <p class="kick">FGT &middot; Font Geo Time</p>
+        <h3>A field survey app for places with no signal</h3>
+        <p>
+          Points are captured with live GPS accuracy, a category, notes and a photo, held
+          locally on the handset, then exported as GeoJSON or CSV once you are back in range.
+          The export screen reports the session honestly: how many points, how many carry a
+          photo, and the average accuracy, so you know what the data is worth before it
+          reaches a desk.
+        </p>
+        <p>
+          Built offline-first because a surveyor loses signal exactly when the work happens.
+          Shipped as a progressive web app and a native Android build, verified on a real
+          handset across six released versions.
+        </p>
+        <dl class="figs">
+          <div><dt>APK size</dt><dd>8.44 MB</dd></div>
+          <div><dt>Versions</dt><dd>6</dd></div>
+          <div><dt>Categories</dt><dd>12</dd></div>
+        </dl>
+        <p class="built">React 18 &middot; Vite &middot; Leaflet &middot; Capacitor 8 &middot; IndexedDB &middot; Workbox PWA &middot; Esri imagery</p>
+      </div>
+    </article>
+
+    <article class="t c6">
+      <div class="shot tall"><img src="assets/lunar-suitability.jpg" alt="Landing site suitability map of the lunar south pole with numbered candidate sites over LOLA hillshade"></div>
+      <p class="kick">Lunar south pole &middot; 80 to 90&deg;S</p>
+      <h3>Artemis-class landing site screening</h3>
+      <p>
+        AHP-weighted fuzzy multi-criteria evaluation across NASA LOLA topography,
+        illumination and roughness, with hard constraints vetoing unlandable terrain. The
+        result was checked against an external benchmark rather than asserted: all nine NASA
+        Artemis III candidate regions fall inside the top 0.1 percent of the scored surface.
+      </p>
+      <dl class="figs">
+        <div><dt>Validation</dt><dd>9 / 9</dd></div>
+        <div><dt>Percentile</dt><dd>0.1 %</dd></div>
+        <div><dt>Grid</dt><dd>50 m</dd></div>
+      </dl>
+      <p class="built">Python &middot; rasterio &middot; geopandas &middot; scipy &middot; NASA LOLA</p>
+    </article>
+
+    <article class="t c6">
+      <div class="shot tall"><img src="assets/parcel-compare.jpg" alt="Reference cadastral parcel boundaries beside model-predicted boundaries for a village"></div>
+      <p class="kick">ParcelAI &middot; land record digitization</p>
+      <h3>The honest limit that shaped the product</h3>
+      <p>
+        A multi-task U-Net trained on more than 20,000 real digitized parcels. Auto-accept
+        tops out near 88 percent correct, so blind automation is not sellable and the project
+        does not claim it. What is sellable is review order: worst-first review reaches 96
+        percent correctness at 70 percent of the effort, surfacing errors up to 2.5 times
+        faster than random.
+      </p>
+      <dl class="figs">
+        <div><dt>Parcel F1</dt><dd>0.689</dd></div>
+        <div><dt>Boundary F1</dt><dd>0.775</dd></div>
+        <div><dt>Tolerance</dt><dd>1.5 m</dd></div>
+      </dl>
+      <p class="built">PyTorch &middot; ONNX Runtime &middot; MobileSAM &middot; FastAPI &middot; QGIS plugin</p>
+    </article>
+
+  </div>
+
+  <div class="gal">
+    <figure><img src="assets/map-fsi.jpg" alt="Weighted Forest Sensitivity Index map">
+      <figcaption><b>Weighted FSI</b>Seven-class index, 10 m</figcaption></figure>
+    <figure><img src="assets/map-kmeans.jpg" alt="Five class K-Means classification map">
+      <figcaption><b>K-Means</b>Five-class unsupervised</figcaption></figure>
+    <figure><img src="assets/map-ndvi.jpg" alt="Multi-year NDVI composite panels">
+      <figcaption><b>NDVI composite</b>Four epochs</figcaption></figure>
+    <figure><img src="assets/map-rvi.jpg" alt="Multi-year SAR radar vegetation index composite">
+      <figcaption><b>SAR RVI</b>All weather</figcaption></figure>
+    <figure><img src="assets/map-hillshade.jpg" alt="Digital elevation model hillshade">
+      <figcaption><b>DEM hillshade</b>Terrain relief</figcaption></figure>
+    <figure><img src="assets/map-studyarea.png" alt="Study area location map">
+      <figcaption><b>Study area</b>Location and extent</figcaption></figure>
+    <figure><img src="assets/map-validation.png" alt="Forest sensitivity index validation figure">
+      <figcaption><b>FSI validation</b>Occurrence check</figcaption></figure>
+    <figure><img src="assets/lunar-weights.png" alt="AHP criterion weights figure">
+      <figcaption><b>AHP weights</b>Criterion weighting</figcaption></figure>
+    <figure><img src="assets/lunar-sensitivity.png" alt="Weight sensitivity analysis figure">
+      <figcaption><b>Sensitivity</b>Ranking stability</figcaption></figure>
+    <figure><img src="assets/map-workflow.jpg" alt="Methodology workflow diagram">
+      <figcaption><b>Methodology</b>Processing chain</figcaption></figure>
+  </div>
+</section>
+
+<!-- ===================================================== RESEARCH -->
+<section style="padding-top:0">
+  <p class="eyebrow">Research</p>
+  <h2>Three papers, at the stage<br>they actually are.</h2>
+  <div class="rows">
+    <div class="row">
+      <p class="venue">Acta Geophysica<br>Springer &middot; first author</p>
+      <div>
+        <h4>Climate-driven forest biodiversity sensitivity</h4>
+        <p>Sentinel-1 SAR time series fused with Sentinel-2 multispectral imagery over the
+           Sulaiman Range.</p>
+        <p class="note">Drafted, awaiting supervisor approval. Not submitted, not under review.</p>
+      </div>
+    </div>
+    <div class="row">
+      <p class="venue">Quaternary International<br>Elsevier &middot; third author</p>
+      <div>
+        <h4>Multi-decadal assessment of Minapin Glacier, Karakoram</h4>
+        <p>Landsat 5, 7 and 8 across six late-summer epochs from 2000 to 2025: glacier and
+           perennial snow extent, land surface temperature, NDSI and SRTM hypsometry.</p>
+        <p class="note">Prepared for submission.</p>
+      </div>
+    </div>
+    <div class="row">
+      <p class="venue">EnMAP mission<br>Imaging spectroscopy</p>
+      <div>
+        <h4>Hyperspectral mapping of polymer-bearing surfaces over Lahore</h4>
+        <p>Tasking proposal granted with a twelve-tile allocation and four observation
+           requests filed across three seasonal windows. Detection validated on EnMAP and
+           EMIT data.</p>
+        <p class="note">Acquisition scheduled. Field validation pending.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== HOW I WORK -->
+<section style="padding-top:0">
+  <p class="eyebrow">How I work</p>
+  <h2>What I will tell you<br>before you commit.</h2>
+  <div class="bento">
+    <div class="t c3">
+      <h4>Generated output needs a gate</h4>
+      <p>Anything that publishes on your behalf gets a human approval step wherever being
+         wrong in public costs more than the review time does.</p>
+    </div>
+    <div class="t c3">
+      <h4>A model is not a measurement</h4>
+      <p>Where numbers matter I compute them first and let the model describe them. It can
+         write the report; it does not get to invent the figure.</p>
+    </div>
+    <div class="t c3">
+      <h4>Imagery has hard limits</h4>
+      <p>Optical data is cloud-limited and Sentinel-2 is 10 m at best. If your dates or your
+         level of detail are not achievable, I say so before you order.</p>
+    </div>
+    <div class="t c3">
+      <h4>Sometimes the answer is no</h4>
+      <p>One of my own studies concluded the method did not work at that site, and said so.
+         You are better served by that than by something convincing and wrong.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== TOOLS + CLOSE -->
+<section style="padding-top:0">
+  <p class="eyebrow">Tools</p>
+  <p class="tools">
+    n8n <i>/</i> Python <i>/</i> Claude <i>/</i> Gemini <i>/</i> fal.ai <i>/</i> ElevenLabs
+    <i>/</i> Veo <i>/</i> Whisper <i>/</i> Pinecone <i>/</i> FFmpeg <i>/</i> Remotion
+    <i>/</i> Playwright <i>/</i> FastAPI <i>/</i> Flask <i>/</i> Next.js <i>/</i> React
+    <i>/</i> PyTorch <i>/</i> ONNX <i>/</i> QGIS <i>/</i> Google Earth Engine
+    <i>/</i> CesiumJS <i>/</i> Leaflet <i>/</i> rasterio <i>/</i> geopandas
+    <i>/</i> SQLite <i>/</i> PostGIS <i>/</i> Docker
+  </p>
+</section>
+
+<section class="close">
+  <h2>Tell me what should<br>run without you.</h2>
+  <p class="sec-sub">
+    Describe the process you are doing by hand, or the area and dates you need measured. I
+    will come back with what can be automated, what should stay under human approval, and
+    what I would build, before either of us commits to anything.
+  </p>
+  <div class="cta">
+    <button class="btn btn-1 js-copy" type="button" data-copy="waseemhanif353@gmail.com">waseemhanif353@gmail.com</button>
+    <a class="btn btn-2" href="https://www.linkedin.com/in/muhammed-waseem/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</section>
+
+<footer>
+  <span>Muhammad Waseem Hanif &middot; AI systems, automation and remote sensing</span>
+  <span><a href="https://www.linkedin.com/in/muhammed-waseem/" target="_blank" rel="noopener">linkedin.com/in/muhammed-waseem</a></span>
+</footer>
+
+</div>
+
+<script>
+/* ---- drifting starfield: space is the subject, so the ground moves like it ---- */
+(function () {
+  var c = document.getElementById('sky');
+  if (!c || !c.getContext) return;
+  var ctx = c.getContext('2d');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var w = 0, h = 0, dpr = 1, stars = [], sats = [], raf = null, last = 0, satTimer = 0;
+
+  function build() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = c.width = Math.floor(window.innerWidth * dpr);
+    h = c.height = Math.floor(window.innerHeight * dpr);
+    c.style.width = window.innerWidth + 'px';
+    c.style.height = window.innerHeight + 'px';
+    var n = Math.min(260, Math.round((window.innerWidth * window.innerHeight) / 9000));
+    stars = [];
+    for (var i = 0; i < n; i++) {
+      var layer = i % 3;
+      stars.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: (layer === 0 ? 0.5 : layer === 1 ? 0.85 : 1.3) * dpr,
+        a: 0.18 + Math.random() * 0.42,
+        tw: Math.random() * 6.283,
+        tws: 0.4 + Math.random() * 1.1,
+        vx: (0.05 + layer * 0.07) * dpr,
+        warm: Math.random() < 0.13
+      });
+    }
+    sats = [];
+  }
+
+  function paint(s, a) {
+    ctx.beginPath();
+    ctx.fillStyle = s.warm ? 'rgba(232,163,61,' + a + ')' : 'rgba(206,222,242,' + a + ')';
+    ctx.arc(s.x, s.y, s.r, 0, 6.283);
+    ctx.fill();
+  }
+
+  function frame(t) {
+    var dt = Math.min(48, t - last) || 16; last = t;
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      s.x += s.vx * dt * 0.06;
+      if (s.x > w + 2) { s.x = -2; s.y = Math.random() * h; }
+      s.tw += s.tws * dt * 0.0012;
+      paint(s, (s.a * (0.7 + 0.3 * Math.sin(s.tw))).toFixed(3));
+    }
+    satTimer += dt;
+    if (satTimer > 11000 && !sats.length) {
+      satTimer = 0;
+      var dir = Math.random() < 0.5 ? 1 : -1;
+      sats.push({
+        x: dir > 0 ? -30 * dpr : w + 30 * dpr,
+        y: h * (0.1 + Math.random() * 0.65),
+        vx: dir * (0.5 + Math.random() * 0.35) * dpr,
+        vy: (Math.random() - 0.5) * 0.12 * dpr
+      });
+    }
+    for (var j = sats.length - 1; j >= 0; j--) {
+      var p = sats[j];
+      p.x += p.vx * dt * 0.06; p.y += p.vy * dt * 0.06;
+      ctx.strokeStyle = 'rgba(232,163,61,.16)';
+      ctx.lineWidth = 1 * dpr;
+      ctx.beginPath();
+      ctx.moveTo(p.x - p.vx * 190, p.y - p.vy * 190);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(240,190,110,.8)';
+      ctx.arc(p.x, p.y, 1.4 * dpr, 0, 6.283);
+      ctx.fill();
+      if (p.x < -60 * dpr || p.x > w + 60 * dpr) sats.splice(j, 1);
+    }
+    raf = window.requestAnimationFrame(frame);
+  }
+
+  function start() { if (!raf) raf = window.requestAnimationFrame(frame); }
+  function stop() { if (raf) { window.cancelAnimationFrame(raf); raf = null; } }
+
+  build();
+  if (reduce) {
+    for (var k = 0; k < stars.length; k++) paint(stars[k], stars[k].a.toFixed(3));
+  } else {
+    start();
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { stop(); } else { last = 0; start(); }
+    });
+  }
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () {
+      build();
+      if (reduce) { ctx.clearRect(0, 0, w, h); for (var k = 0; k < stars.length; k++) paint(stars[k], stars[k].a.toFixed(3)); }
+    }, 180);
+  });
+})();
+
+/* ---- mail ----
+   Inside the artifact frame a mailto: handoff is blocked by the sandbox, so the
+   button copies instead. Served top-level (GitHub Pages) mailto works fine, so
+   promote the buttons to real mail links there. ---- */
+(function () {
+  var topLevel = false;
+  try { topLevel = (window.self === window.top); } catch (e) { topLevel = false; }
+  var btns = document.querySelectorAll('.js-copy');
+  if (topLevel) {
+    for (var m = 0; m < btns.length; m++) {
+      var b0 = btns[m];
+      var a = document.createElement('a');
+      a.className = b0.className.replace('js-copy', '').trim();
+      a.href = 'mailto:' + b0.getAttribute('data-copy') + '?subject=Project%20enquiry';
+      a.textContent = b0.textContent;
+      b0.parentNode.replaceChild(a, b0);
+    }
+    return;
+  }
+  for (var i = 0; i < btns.length; i++) {
+    (function (b) {
+      var original = b.textContent;
+      b.addEventListener('click', function () {
+        var v = b.getAttribute('data-copy');
+        var done = function () {
+          b.textContent = 'Copied to clipboard';
+          setTimeout(function () { b.textContent = original; }, 1800);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(v).then(done, function () {
+            b.textContent = v; window.prompt('Copy the address:', v);
+          });
+        } else {
+          window.prompt('Copy the address:', v);
+        }
+      });
+    })(btns[i]);
+  }
+})();
+</script>

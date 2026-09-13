@@ -1,0 +1,3 @@
+assets/raw/
+*.pyc
+__pycache__/
